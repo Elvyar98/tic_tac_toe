@@ -27,28 +27,33 @@ function createBoard() {
 
   const getGrid = () => [...grid];
   const placeMarker = (marker, position) => {
-    if (grid[position] === 0) return 0;
-    else {
+    if (grid[position] === 0) {
       grid[position] = marker;
       return 1;
+    } else {
+      return 0;
     }
   };
 
   const getResults = () => {
-    winningLines.forEach((line) => {
-      if (grid[line[0]] == grid[line[1]] && grid[line[1]] == grid[line[2]]) {
-        return { status: "win", marker: line[1] };
-      }
-    });
+    for (const line of winningLines) {
+      const [a, b, c] = line;
 
-    grid.forEach((pos) => {
-      if (pos == 0) {
-        return { status: "continue" };
-      } else {
-        return { status: "draw" };
+      if ((grid[a] || grid[b] || grid[c]) != 0) {
+        if (grid[a] === grid[b] && grid[b] === grid[c]) {
+          return { status: "win", marker: grid[a] };
+        }
       }
-    });
+    }
+
+    if (grid.includes(0)) {
+      return { status: "continue" };
+    } else {
+      return { status: "draw" };
+    }
   };
+
+  return { getGrid, placeMarker, getResults };
 }
 
 const game = () => {
