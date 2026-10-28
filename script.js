@@ -56,11 +56,21 @@ function createBoard() {
   return { getGrid, placeMarker, getResults };
 }
 
-const game = () => {
+const game = (() => {
   let round = 0;
   let players = [];
   let activeIndex = 0;
   let currentBoard = null;
+
+  function changeActivePlayer() {
+    if (round % 2 == 0) {
+      activeIndex = players[0].getMarker();
+      return `${players[0].getName()} starts`;
+    } else {
+      activeIndex = players[1].getMarker();
+      return `${players[1].getName()} starts`;
+    }
+  }
 
   const startGame = (name1, marker1, name2, marker2) => {
     const player1 = createPlayer(name1, marker1);
@@ -70,6 +80,7 @@ const game = () => {
     players.push(player1);
     players.push(player2);
     activeIndex = player1.getMarker();
+    return `${player1.getName()} starts`;
   };
 
   const playTurn = () => {
@@ -98,5 +109,40 @@ const game = () => {
   const newRound = () => {
     round++;
     currentBoard = createBoard();
+    changeActivePlayer();
   };
-};
+
+  const restart = () => {
+    for (const player of players) player.resetScore();
+    round = 0;
+    currentBoard = createBoard();
+    changeActivePlayer();
+  };
+
+  const getRound = () => round;
+  const getScores = () => {
+    let scores = [];
+    for (const player of players) {
+      scores.push({ name: player.getName(), score: player.getScore() });
+    }
+  };
+
+  const getActivePlayer = () => {
+    for (const player of players) {
+      if (player.getMarker() == activeIndex) player.getName();
+    }
+  };
+
+  const getGrid = () => currentBoard.getGrid();
+
+  return {
+    startGame,
+    playTurn,
+    newRound,
+    restart,
+    getRound,
+    getScores,
+    getActivePlayer,
+    getGrid,
+  };
+})();
