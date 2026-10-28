@@ -41,7 +41,7 @@ function createBoard() {
 
       if ((grid[a] || grid[b] || grid[c]) != 0) {
         if (grid[a] === grid[b] && grid[b] === grid[c]) {
-          return { status: "win", marker: grid[a] };
+          return { status: "win", winner: grid[a] };
         }
       }
     }
@@ -57,13 +57,46 @@ function createBoard() {
 }
 
 const game = () => {
-  let rounds = 0;
+  let round = 0;
+  let players = [];
+  let activeIndex = 0;
+  let currentBoard = null;
 
   const startGame = (name1, marker1, name2, marker2) => {
     const player1 = createPlayer(name1, marker1);
     const player2 = createPlayer(name2, marker2);
-    const gameBoard = createBoard();
+
+    currentBoard = createBoard();
+    players.push(player1);
+    players.push(player2);
+    activeIndex = player1.getMarker();
   };
 
-  const playTurn = () => {};
+  const playTurn = () => {
+    if (currentBoard.placeMarker(activeIndex)) {
+      if (currentBoard.getResults().some((e) => e.status == "win")) {
+        for (const player of players) {
+          if (player.getMarker() == activeIndex) {
+            player.increaseScore();
+            return { status: "winner", winner: player.getName() };
+          }
+        }
+      } else if (currentBoard.getResults().some((e) => e.status == "draw")) {
+        return currentBoard.getResults();
+      } else {
+        for (const player of players) {
+          if (player.getMarker() != activeIndex)
+            activeIndex = player.getMarker();
+          return { status: "continue", next: player.getName() };
+        }
+      }
+    } else {
+      return { status: "refused" };
+    }
+  };
+
+  const newRound = () => {
+    round++;
+    currentBoard = createBoard();
+  };
 };
