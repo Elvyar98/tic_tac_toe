@@ -59,51 +59,51 @@ function createBoard() {
 const game = (() => {
   let round = 0;
   let players = [];
-  let activeIndex = 0;
+  let activeMarker = 0;
   let currentBoard = null;
 
   function changeActivePlayer() {
     if (round % 2 == 0) {
-      activeIndex = players[0].getMarker();
+      activeMarker = players[0].getMarker();
       return `${players[0].getName()} starts`;
     } else {
-      activeIndex = players[1].getMarker();
+      activeMarker = players[1].getMarker();
       return `${players[1].getName()} starts`;
     }
   }
 
   const startGame = (name1, marker1, name2, marker2) => {
+    players = [];
     const player1 = createPlayer(name1, marker1);
     const player2 = createPlayer(name2, marker2);
 
     currentBoard = createBoard();
     players.push(player1);
     players.push(player2);
-    activeIndex = player1.getMarker();
+    activeMarker = player1.getMarker();
     return `${player1.getName()} starts`;
   };
 
-  const playTurn = () => {
-    if (currentBoard.placeMarker(activeIndex)) {
-      if (currentBoard.getResults().some((e) => e.status == "win")) {
-        for (const player of players) {
-          if (player.getMarker() == activeIndex) {
-            player.increaseScore();
-            return { status: "winner", winner: player.getName() };
-          }
-        }
-      } else if (currentBoard.getResults().some((e) => e.status == "draw")) {
-        return currentBoard.getResults();
-      } else {
-        for (const player of players) {
-          if (player.getMarker() != activeIndex)
-            activeIndex = player.getMarker();
-          return { status: "continue", next: player.getName() };
-        }
-      }
-    } else {
+  const playTurn = (position) => {
+    if (!currentBoard.placeMarker(activeMarker, position)) {
       return { status: "refused" };
     }
+
+    const result = currentBoard.getResults();
+    const current = players.find((p) => p.getMarker() === activeMarker);
+
+    if (result.status === "win") {
+      current.increaseScore();
+      return { status: "win", winner: current.getName() };
+    }
+
+    if (result.status === "draw") {
+      return { status: "draw" };
+    }
+
+    const next = players.find((p) => p.getMarker() !== activeMarker);
+    activeMarker = next.getMarker();
+    return { status: "continue", next: next.getName() };
   };
 
   const newRound = () => {
@@ -125,11 +125,13 @@ const game = (() => {
     for (const player of players) {
       scores.push({ name: player.getName(), score: player.getScore() });
     }
+
+    return scores;
   };
 
   const getActivePlayer = () => {
     for (const player of players) {
-      if (player.getMarker() == activeIndex) player.getName();
+      if (player.getMarker() == activeMarker) return player.getName();
     }
   };
 
