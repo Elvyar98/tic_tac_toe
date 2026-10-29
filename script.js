@@ -58,11 +58,12 @@ function createBoard() {
 
 const game = (() => {
   let round = 0;
+  let activeRound = false;
   let players = [];
   let activeMarker = 0;
   let currentBoard = null;
 
-  function changeActivePlayer() {
+  function changeMarker() {
     if (round % 2 == 0) {
       activeMarker = players[0].getMarker();
       return `${players[0].getName()} starts`;
@@ -74,6 +75,8 @@ const game = (() => {
 
   const startGame = (name1, marker1, name2, marker2) => {
     players = [];
+    round = 1;
+    activeRound = true;
     const player1 = createPlayer(name1, marker1);
     const player2 = createPlayer(name2, marker2);
 
@@ -85,6 +88,8 @@ const game = (() => {
   };
 
   const playTurn = (position) => {
+    if (!activeRound) return { status: "inactive" };
+
     if (!currentBoard.placeMarker(activeMarker, position)) {
       return { status: "refused" };
     }
@@ -94,10 +99,12 @@ const game = (() => {
 
     if (result.status === "win") {
       current.increaseScore();
+      activeRound = false;
       return { status: "win", winner: current.getName() };
     }
 
     if (result.status === "draw") {
+      activeRound = false;
       return { status: "draw" };
     }
 
@@ -109,21 +116,23 @@ const game = (() => {
   const newRound = () => {
     round++;
     currentBoard = createBoard();
-    changeActivePlayer();
+    changeMarker();
+    activeRound = true;
   };
 
   const restart = () => {
     for (const player of players) player.resetScore();
     round = 0;
     currentBoard = createBoard();
-    changeActivePlayer();
+    changeMarker();
+    activeRound = true;
   };
 
   const getRound = () => round;
   const getScores = () => {
     let scores = [];
     for (const player of players) {
-      scores.push({ name: player.getName(), score: player.getScore() });
+      scores.push(`${player.getName()}: ${player.getScore()}`);
     }
 
     return scores;
