@@ -1,0 +1,18 @@
+body {
+  background-color: whitesmoke;
+  padding: 10px;
+  text-align: center;
+}
+
+.gameboard {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-row: 1fr 1fr 1fr;
+  padding: 20px;
+}
+.grid-cell {
+  border-style: solid;
+  border-color: black;
+  border-size: 5px;
+  padding: 40px;
+}

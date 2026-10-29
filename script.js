@@ -64,7 +64,7 @@ const game = (() => {
   let currentBoard = null;
 
   function changeMarker() {
-    if (round % 2 == 0) {
+    if (round % 2 == 1) {
       activeMarker = players[0].getMarker();
       return `${players[0].getName()} starts`;
     } else {
@@ -156,4 +156,16 @@ const game = (() => {
     getActivePlayer,
     getGrid,
   };
+})();
+
+const display = (() => {
+  const cells = document.querySelectorAll(".grid-cell");
+
+  const renderGrid = (grid) => {
+    cells.forEach((cell) => {
+      const value = grid[cell.dataset.position];
+      cell.textContent = value === 0 ? "" : value;
+    });
+  };
+  return { renderGrid };
 })();
