@@ -169,3 +169,18 @@ const display = (() => {
   };
   return { renderGrid };
 })();
+
+const cells = document.querySelectorAll(".grid-cell");
+
+cells.forEach((cell) => {
+  cell.addEventListener("click", () => {
+    const result = game.playTurn(Number(cell.dataset.position));
+
+    if (result.status === "refused" || result.status === "inactive") {
+      cell.classList.add("flash");
+      setTimeout(() => cell.classList.remove("flash"), 300);
+    }
+
+    display.renderGrid(game.getGrid());
+  });
+});
