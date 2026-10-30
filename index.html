@@ -13,6 +13,34 @@
       <hr />
     </div>
     <main>
+      <div class="active-player">
+        <h2 class="active-player-text"></h2>
+      </div>
+      <dialog id="new-game">
+        <form action="" method="dialog">
+          <div class="player-one-input">
+            <label for="player-one">Enter your name: </label>
+            <input
+              type="text"
+              name="name"
+              id="player-one"
+              required="required"
+            />
+          </div>
+          <div class="player-two-input">
+            <label for="player-two">Enter your name: </label>
+            <input
+              type="text"
+              name="name"
+              id="player-one"
+              required="required"
+            />
+          </div>
+          <div class="start-game-button">
+            <button type="submit" value="Start game"></button>
+          </div>
+        </form>
+      </dialog>
       <div class="gameboard">
         <div class="grid-cell" data-position="0">0</div>
         <div class="grid-cell" data-position="1">1</div>
