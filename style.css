@@ -8,13 +8,20 @@ body {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   grid-template-rows: 1fr 1fr 1fr;
+  gap: 5px;
+
+  width: 700px;
+  height: 700px;
+  background-color: beige;
   padding: 20px;
+  border: 2px solid black;
+  margin: 100px 60px;
 }
 .grid-cell {
   border-style: solid;
   border-color: black;
-  border-width: 5px;
   padding: 40px;
+  text-align: center;
 }
 
 .flash {

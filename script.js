@@ -167,6 +167,8 @@ const display = (() => {
       cell.textContent = value === 0 ? "" : value;
     });
   };
+
+  const showResults = (result, scores, round) => {};
   return { renderGrid };
 })();
 
@@ -184,3 +186,6 @@ cells.forEach((cell) => {
     display.renderGrid(game.getGrid());
   });
 });
+
+game.startGame("A", "X", "B", "O");
+display.renderGrid(game.getGrid());

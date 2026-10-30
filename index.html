@@ -24,6 +24,39 @@
         <div class="grid-cell" data-position="7">7</div>
         <div class="grid-cell" data-position="8">8</div>
       </div>
+      <dialog id="status-box">
+        <div class="result-bar">
+          <h2 class="result-text"></h2>
+        </div>
+        <div class="score-bar">
+          <span class="player-one-name"></span>
+          <span class="player-one-score"></span>
+          <span class="player-two-name"></span>
+          <span class="player-two-score"></span>
+        </div>
+        <div class="round-bar">
+          <h3 class="round-text">ROUND:</h3>
+          <span class="round-number"></span>
+        </div>
+        <div class="button-bar">
+          <button
+            commandfor="status-box"
+            command="close"
+            type="button"
+            class="restart-button"
+          >
+            Restart
+          </button>
+          <button
+            commandfor="status-box"
+            command="close"
+            type="button"
+            class="new-round-button"
+          >
+            New Round
+          </button>
+        </div>
+      </dialog>
     </main>
   </body>
 </html>
