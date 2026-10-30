@@ -219,7 +219,6 @@ const controller = (() => {
   const init = () => {
     cells.forEach((cell) => {
       cell.addEventListener("click", () => {
-        console.log("click handler ran for cell", cell.dataset.position);
         const result = game.playTurn(Number(cell.dataset.position));
 
         if (result.status === "refused" || result.status === "inactive") {
