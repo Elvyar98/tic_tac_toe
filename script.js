@@ -185,6 +185,16 @@ const display = (() => {
       resultText.textContent = result.status;
     }
 
+    statusBox.addEventListener("cancel", (e) => {
+      (e, preventDefault());
+    });
+
+    statusBox.addEventListener("keydown", (e) => {
+      if (e.key == "Escape") {
+        e.preventDefault();
+      }
+    });
+
     playerOneName.textContent = scores[0].name;
     playerOneScore.textContent = scores[0].score;
     playerTwoName.textContent = scores[1].name;
@@ -224,7 +234,7 @@ newRoundbtn.addEventListener("click", () => {
 
 restarbtn.addEventListener("click", () => {
   game.restart();
-  display.renderGrid();
+  display.renderGrid(game.getGrid());
 });
 
 game.startGame("A", "X", "B", "O");
