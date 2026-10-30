@@ -122,7 +122,7 @@ const game = (() => {
 
   const restart = () => {
     for (const player of players) player.resetScore();
-    round = 0;
+    round = 1;
     currentBoard = createBoard();
     changeMarker();
     activeRound = true;
@@ -171,6 +171,16 @@ const display = (() => {
   const roundNumber = document.querySelector(".round-number");
   const resultText = document.querySelector(".result-text");
 
+  statusBox.addEventListener("cancel", (e) => {
+    e.preventDefault();
+  });
+
+  statusBox.addEventListener("keydown", (e) => {
+    if (e.key == "Escape") {
+      e.preventDefault();
+    }
+  });
+
   const renderGrid = (grid) => {
     cells.forEach((cell) => {
       const value = grid[cell.dataset.position];
@@ -182,18 +192,8 @@ const display = (() => {
     if (result.status == "win") {
       resultText.textContent = `Winner is ${result.winner}`;
     } else {
-      resultText.textContent = result.status;
+      resultText.textContent = "It's a draw";
     }
-
-    statusBox.addEventListener("cancel", (e) => {
-      (e, preventDefault());
-    });
-
-    statusBox.addEventListener("keydown", (e) => {
-      if (e.key == "Escape") {
-        e.preventDefault();
-      }
-    });
 
     playerOneName.textContent = scores[0].name;
     playerOneScore.textContent = scores[0].score;
@@ -206,36 +206,73 @@ const display = (() => {
   return { renderGrid, showResults };
 })();
 
-const cells = document.querySelectorAll(".grid-cell");
+const controller = (() => {
+  const cells = document.querySelectorAll(".grid-cell");
+  const activePlayer = document.querySelector(".active-player-text");
+  const restartBtn = document.querySelector(".restart-button");
+  const newRoundBtn = document.querySelector(".new-round-button");
+  const startUpBox = document.querySelector("#new-game");
+  const form = document.querySelector("#dialog");
+  const playerOneInput = document.querySelector("#player-one");
+  const playerTwoInput = document.querySelector("#player-two");
 
-cells.forEach((cell) => {
-  cell.addEventListener("click", () => {
-    const result = game.playTurn(Number(cell.dataset.position));
+  const init = () => {
+    cells.forEach((cell) => {
+      cell.addEventListener("click", () => {
+        console.log("click handler ran for cell", cell.dataset.position);
+        const result = game.playTurn(Number(cell.dataset.position));
 
-    if (result.status === "refused" || result.status === "inactive") {
-      cell.classList.add("flash");
-      setTimeout(() => cell.classList.remove("flash"), 300);
-    }
+        if (result.status === "refused" || result.status === "inactive") {
+          cell.classList.add("flash");
+          setTimeout(() => cell.classList.remove("flash"), 300);
+        }
 
-    if (result.status === "win" || result.status === "draw") {
-      display.showResults(result, game.getScores(), game.getRound());
-    }
-    display.renderGrid(game.getGrid());
-  });
-});
+        if (result.status === "win" || result.status === "draw") {
+          display.showResults(result, game.getScores(), game.getRound());
+        }
 
-const restarbtn = document.querySelector(".restart-button");
-const newRoundbtn = document.querySelector(".new-round-button");
+        activePlayer.textContent = `It's ${game.getActivePlayer()}'s turn`;
 
-newRoundbtn.addEventListener("click", () => {
-  game.newRound();
-  display.renderGrid(game.getGrid());
-});
+        display.renderGrid(game.getGrid());
+      });
+    });
 
-restarbtn.addEventListener("click", () => {
-  game.restart();
-  display.renderGrid(game.getGrid());
-});
+    newRoundBtn.addEventListener("click", () => {
+      game.newRound();
+      activePlayer.textContent = `${game.getActivePlayer()} starts`;
+      display.renderGrid(game.getGrid());
+    });
 
-game.startGame("A", "X", "B", "O");
-display.renderGrid(game.getGrid());
+    restartBtn.addEventListener("click", () => {
+      game.restart();
+      activePlayer.textContent = `${game.getActivePlayer()} starts`;
+      display.renderGrid(game.getGrid());
+    });
+
+    window.addEventListener("load", () => {
+      startUpBox.showModal();
+    });
+
+    startUpBox.addEventListener("cancel", (e) => {
+      e.preventDefault();
+    });
+
+    startUpBox.addEventListener("keydown", (e) => {
+      if (e.key == "Escape") {
+        e.preventDefault();
+      }
+    });
+
+    form.addEventListener("submit", () => {
+      const playerOne = playerOneInput.value.trim();
+      const playerTwo = playerTwoInput.value.trim();
+
+      activePlayer.textContent = game.startGame(playerOne, "X", playerTwo, "O");
+      display.renderGrid(game.getGrid());
+    });
+  };
+
+  return { init };
+})();
+
+controller.init();

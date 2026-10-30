@@ -17,9 +17,9 @@
         <h2 class="active-player-text"></h2>
       </div>
       <dialog id="new-game">
-        <form action="" method="dialog">
+        <form action="GET" method="dialog" id="dialog">
           <div class="player-one-input">
-            <label for="player-one">Enter your name: </label>
+            <label for="player-one">Player One (X): </label>
             <input
               type="text"
               name="name"
@@ -28,29 +28,29 @@
             />
           </div>
           <div class="player-two-input">
-            <label for="player-two">Enter your name: </label>
+            <label for="player-two">Player Two (O): </label>
             <input
               type="text"
               name="name"
-              id="player-one"
+              id="player-two"
               required="required"
             />
           </div>
           <div class="start-game-button">
-            <button type="submit" value="Start game"></button>
+            <button type="submit" value="Start game">Start Game</button>
           </div>
         </form>
       </dialog>
       <div class="gameboard">
-        <div class="grid-cell" data-position="0">0</div>
-        <div class="grid-cell" data-position="1">1</div>
-        <div class="grid-cell" data-position="2">2</div>
-        <div class="grid-cell" data-position="3">3</div>
-        <div class="grid-cell" data-position="4">4</div>
-        <div class="grid-cell" data-position="5">5</div>
-        <div class="grid-cell" data-position="6">6</div>
-        <div class="grid-cell" data-position="7">7</div>
-        <div class="grid-cell" data-position="8">8</div>
+        <div class="grid-cell" data-position="0"></div>
+        <div class="grid-cell" data-position="1"></div>
+        <div class="grid-cell" data-position="2"></div>
+        <div class="grid-cell" data-position="3"></div>
+        <div class="grid-cell" data-position="4"></div>
+        <div class="grid-cell" data-position="5"></div>
+        <div class="grid-cell" data-position="6"></div>
+        <div class="grid-cell" data-position="7"></div>
+        <div class="grid-cell" data-position="8"></div>
       </div>
       <dialog id="status-box">
         <div class="result-bar">
