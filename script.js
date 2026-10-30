@@ -132,7 +132,10 @@ const game = (() => {
   const getScores = () => {
     let scores = [];
     for (const player of players) {
-      scores.push(`${player.getName()}: ${player.getScore()}`);
+      scores.push({
+        name: `${player.getName()}`,
+        score: `${player.getScore()}`,
+      });
     }
 
     return scores;
@@ -160,6 +163,13 @@ const game = (() => {
 
 const display = (() => {
   const cells = document.querySelectorAll(".grid-cell");
+  const statusBox = document.querySelector("#status-box");
+  const playerOneName = document.querySelector(".player-one-name");
+  const playerOneScore = document.querySelector(".player-one-score");
+  const playerTwoName = document.querySelector(".player-two-name");
+  const playerTwoScore = document.querySelector(".player-two-score");
+  const roundNumber = document.querySelector(".round-number");
+  const resultText = document.querySelector(".result-text");
 
   const renderGrid = (grid) => {
     cells.forEach((cell) => {
@@ -168,8 +178,22 @@ const display = (() => {
     });
   };
 
-  const showResults = (result, scores, round) => {};
-  return { renderGrid };
+  const showResults = (result, scores, round) => {
+    if (result.status == "win") {
+      resultText.textContent = `Winner is ${result.winner}`;
+    } else {
+      resultText.textContent = result.status;
+    }
+
+    playerOneName.textContent = scores[0].name;
+    playerOneScore.textContent = scores[0].score;
+    playerTwoName.textContent = scores[1].name;
+    playerTwoScore.textContent = scores[1].score;
+
+    roundNumber.textContent = round;
+    statusBox.showModal();
+  };
+  return { renderGrid, showResults };
 })();
 
 const cells = document.querySelectorAll(".grid-cell");
@@ -183,8 +207,24 @@ cells.forEach((cell) => {
       setTimeout(() => cell.classList.remove("flash"), 300);
     }
 
+    if (result.status === "win" || result.status === "draw") {
+      display.showResults(result, game.getScores(), game.getRound());
+    }
     display.renderGrid(game.getGrid());
   });
+});
+
+const restarbtn = document.querySelector(".restart-button");
+const newRoundbtn = document.querySelector(".new-round-button");
+
+newRoundbtn.addEventListener("click", () => {
+  game.newRound();
+  display.renderGrid(game.getGrid());
+});
+
+restarbtn.addEventListener("click", () => {
+  game.restart();
+  display.renderGrid();
 });
 
 game.startGame("A", "X", "B", "O");
